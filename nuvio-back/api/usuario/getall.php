@@ -16,7 +16,7 @@ if ($num > 0) {
             "id" => $idusuario,
             "nome" => $nome,
             "email" => $email,
-            "senha" => $senha
+            "senhaHash" => $senhaHash
         );
         array_push($usuario_arr, $usuario_item);
     }

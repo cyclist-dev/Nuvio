@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             "id" => $usuario->idUsuario,
             "nome" => $usuario->nome,
             "email" => $usuario->email,
-            "senha" => $usuario->senha
+            "senhaHash" => $usuario->senhaHash
         ); 
         echo json_encode($usuario_arr, JSON_PRETTY_PRINT);
     } else {

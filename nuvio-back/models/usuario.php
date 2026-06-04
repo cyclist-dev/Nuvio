@@ -7,7 +7,7 @@ class Usuario
     public $idUsuario;
     public $nome;
     public $email;
-    public $senha;
+    public $senhaHash;
     public function __construct($conexao)
     {
         $this->conn = $conexao;
@@ -19,7 +19,7 @@ class Usuario
 
     public function getall()
     {
-        $query = "SELECT idUsuario AS idUsuario, nome, email, senha FROM " . $this->tabela;
+        $query = "SELECT idUsuario AS idUsuario, nome, email, senhaHash FROM " . $this->tabela;
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -32,7 +32,7 @@ class Usuario
             return false;
         }
 
-        $query = "SELECT idUsuario AS idUsuario, nome, email, senha FROM " . $this->tabela . " WHERE idUsuario = ? LIMIT 1";
+        $query = "SELECT idUsuario AS idUsuario, nome, email, senhaHash FROM " . $this->tabela . " WHERE idUsuario = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(1, $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -45,14 +45,14 @@ class Usuario
         $this->idUsuario = $row['idUsuario'];
         $this->nome = $row['nome'];
         $this->email = $row['email'];
-        $this->senha = $row['senha'];
+        $this->senhaHash = $row['senhaHash'];
 
         return true;
     }
 
     public function find($id)
     {
-        $query = "SELECT idUsuario AS idUsuario, nome, email, senha FROM " . $this->tabela . " WHERE idUsuario = ? LIMIT 1";
+        $query = "SELECT idUsuario AS idUsuario, nome, email, senhaHash FROM " . $this->tabela . " WHERE idUsuario = ? LIMIT 1";
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(1, $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -61,9 +61,9 @@ class Usuario
 
     public function create()
     {
-        $query = "INSERT INTO " . $this->tabela . " (nome, email, senha) VALUES (?, ?, ?)";
+        $query = "INSERT INTO " . $this->tabela . " (nome, email, senhaHash) VALUES (?, ?, ?)";
         $stmt = $this->conn->prepare($query);
-        $success = $stmt->execute(array($this->nome, $this->email, $this->senha));
+        $success = $stmt->execute(array($this->nome, $this->email, $this->senhaHash));
 
         if ($success) {
             $this->idUsuario = $this->conn->lastInsertId();
@@ -77,7 +77,7 @@ class Usuario
     public function update()
     {
         // Query de atualização
-        $query = 'UPDATE ' . $this->tabela . ' SET nome=:nome, email=:email, senha=:senha WHERE idUsuario=:id';
+        $query = 'UPDATE ' . $this->tabela . ' SET nome=:nome, email=:email, senhaHash=:senhaHash WHERE idUsuario=:id';
 
         // Preparar a query
         $stmt = $this->conn->prepare($query);
@@ -85,13 +85,13 @@ class Usuario
         // Limpar os dados
         $this->nome = htmlspecialchars(strip_tags($this->nome));
         $this->email = htmlspecialchars(strip_tags($this->email));
-        $this->senha = htmlspecialchars(strip_tags($this->senha));
+        $this->senhaHash = htmlspecialchars(strip_tags($this->senhaHash));
         $this->idUsuario = htmlspecialchars(strip_tags($this->idUsuario));
 
         // Vincular os parâmetros
         $stmt->bindParam(':nome', $this->nome);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':senha', $this->senha);
+        $stmt->bindParam(':senhaHash', $this->senhaHash);
         $stmt->bindParam(':id', $this->idUsuario);
 
         // Executar a query
@@ -127,17 +127,17 @@ class Usuario
               SET
                 nome = :nome,
                 email = :email,
-                senha = :senha";
+                senhaHash = :senhaHash";
 
         $stmt = $this->conn->prepare($query);
 
         $this->nome = htmlspecialchars(strip_tags($this->nome));
         $this->email = htmlspecialchars(strip_tags($this->email));
-        $this->senha = htmlspecialchars(strip_tags($this->senha));
+        $this->senhaHash = htmlspecialchars(strip_tags($this->senhaHash));
 
         $stmt->bindParam(':nome', $this->nome);
         $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':senha', $this->senha);
+        $stmt->bindParam(':senhaHash', $this->senhaHash);
 
         if ($stmt->execute()) {
             return true;
